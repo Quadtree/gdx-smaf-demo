@@ -13,7 +13,7 @@ public abstract class ActorContainer {
     private List<Actor> actorAddQueue = new ArrayList<>();
     private Map<Integer, Actor> actorMap = new HashMap<>();
 
-    private Consumer<RPCMessage> rpcMessageSender = (msg) -> { System.err.println("Warning: No-op sender has been used."); };
+    private Consumer<RPCMessage> rpcMessageSender = (msg) -> { SLog.error(() -> "Warning: No-op sender has been used."); };
 
     public void update(){
         for (int i=0;i<actors.size();++i){
@@ -76,7 +76,7 @@ public abstract class ActorContainer {
             actors.add(a);
             return a;
         } catch (ReflectionException ex){
-            Gdx.app.log("SMAF", "Can't create " + typeName + ": " + ex);
+            SLog.warn(() -> "Can't create " + typeName + ": " + ex);
         }
 
         return null;

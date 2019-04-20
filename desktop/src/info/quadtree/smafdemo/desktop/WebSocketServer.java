@@ -51,7 +51,7 @@ public class WebSocketServer {
         }
 
         if (container == null){
-            System.out.println("Starting server");
+            SLog.info(() -> "Starting server");
             new HeadlessApplication(new NoOpAppListener());
             container = factory();
             container.setRpcMessageSender(this::send);

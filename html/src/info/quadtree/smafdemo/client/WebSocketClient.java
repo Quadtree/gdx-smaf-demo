@@ -51,6 +51,8 @@ public class WebSocketClient extends ContainerClient {
                         break;
                 }
             };
+
+            Gdx.app.setLogLevel(Application.LOG_INFO);
         }
 
         int wss = getWebSocketStatus();
@@ -64,7 +66,7 @@ public class WebSocketClient extends ContainerClient {
                 container = factory();
                 container.setRpcMessageSender(this::send);
 
-                Gdx.app.log("SMAF", "Created container, sending greeting");
+                SLog.info(() -> "Created container, sending greeting");
 
                 RPCMessage greetingMessage = new RPCMessage();
                 greetingMessage.setGreeting(true);
@@ -75,7 +77,8 @@ public class WebSocketClient extends ContainerClient {
 
             String nextMsg;
             while((nextMsg = getNextMessage()) != null){
-                Gdx.app.log("SMAF", "Processing incoming message: " + nextMsg);
+                final String nextMessageFinal = nextMsg;
+                SLog.info(() -> "Processing incoming message: " + nextMessageFinal);
                 try {
                     Json js = new Json();
                     RPCMessage rpcMessage = js.fromJson(RPCMessage.class, nextMsg);
@@ -91,13 +94,13 @@ public class WebSocketClient extends ContainerClient {
                             actor.executeRPC(rpcMessage, "Client");
                         } else {
                             myId = rpcMessage.getTargetPlayerId();
-                            Gdx.app.log("SMAF", "Server has set my id to " + myId);
+                            SLog.info(() -> "Server has set my id to " + myId);
                         }
                     } else {
-                        Gdx.app.log("SMAF", "Message sent from client was not a valid RPC");
+                        SLog.info(() -> "Message sent from client was not a valid RPC");
                     }
                 } catch (Throwable t){
-                    Gdx.app.log("SMAF", "Error processing message: " + t);
+                    SLog.info(() -> "Error processing message: " + t);
                 }
             }
 
