@@ -35,7 +35,7 @@ public class WebSocketServer {
 
     Random rand = new Random();
 
-    long updateTimeDone;
+    private long updateTimeDone;
 
     @OnMessage
     public void messageReceived(String msg, Session sess){
