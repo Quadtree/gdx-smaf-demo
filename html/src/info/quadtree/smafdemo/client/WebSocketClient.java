@@ -8,6 +8,8 @@ import info.quadtree.smafdemo.smaf.ActorContainer;
 import info.quadtree.smafdemo.smaf.ContainerClient;
 import info.quadtree.smafdemo.smaf.RPCMessage;
 
+import java.util.Objects;
+
 public class WebSocketClient extends ContainerClient {
     private ActorContainer factory(){
         return new DemoActorContainer();
@@ -16,6 +18,8 @@ public class WebSocketClient extends ContainerClient {
     ActorContainer container;
 
     private long updateTimeDone;
+
+    private int myId = -1;
 
     private static final int WS_STATUS_UNKNOWN = -1;
     private static final int WS_STATUS_CONNECTING = 0;
@@ -58,12 +62,16 @@ public class WebSocketClient extends ContainerClient {
                     Json js = new Json();
                     RPCMessage rpcMessage = js.fromJson(RPCMessage.class, nextMsg);
                     if (rpcMessage != null) {
-
-                        Actor actor = container.getActorById(rpcMessage.getTargetActor());
-                        if (actor != null) {
-                            actor.executeRPC(rpcMessage, "Client");
+                        if (Objects.equals(rpcMessage.getGreeting(), true)) {
+                            Actor actor = container.getActorById(rpcMessage.getTargetActor());
+                            if (actor != null) {
+                                actor.executeRPC(rpcMessage, "Client");
+                            } else {
+                                System.err.println("RPC received for non-existant actor " + rpcMessage.getTargetActor());
+                            }
                         } else {
-                            System.err.println("RPC received for non-existant actor " + rpcMessage.getTargetActor());
+                            myId = rpcMessage.getTargetPlayerId();
+                            Gdx.app.log("SMAF", "Server has set my id to " + myId);
                         }
                     } else {
                         System.err.println("Message sent from client was not a valid RPC");

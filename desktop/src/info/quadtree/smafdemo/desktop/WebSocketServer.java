@@ -19,6 +19,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
+import info.quadtree.smafdemo.smaf.ContainerClient;
 import info.quadtree.smafdemo.smaf.RPCMessage;
 
 @ServerEndpoint("/smafserver")
@@ -43,6 +44,7 @@ public class WebSocketServer {
             System.out.println("Starting server");
             new HeadlessApplication(new NoOpAppListener());
             container = factory();
+            container.setRpcMessageSender(this::send);
 
             updateTimeDone = System.currentTimeMillis();
 
@@ -62,6 +64,13 @@ public class WebSocketServer {
                     cpi.setWebSocketSession(sess);
 
                     sessionMap.put(sess.getId(), cpi);
+
+                    RPCMessage greetingMessage = new RPCMessage();
+                    greetingMessage.setGreeting(true);
+                    greetingMessage.setTargetPlayerId(newPlayerId);
+
+                    Json js = new Json();
+                    sess.getBasicRemote().sendText(js.toJson(greetingMessage));
                 }
 
                 sessionMap.get(sess.getId()).setLastMessage(Instant.now());
@@ -70,16 +79,17 @@ public class WebSocketServer {
                 Json js = new Json();
                 RPCMessage rpcMessage = js.fromJson(RPCMessage.class, msg);
                 if (rpcMessage != null) {
-
-                    Actor actor = container.getActorById(rpcMessage.getTargetActor());
-                    if (actor != null) {
-                        if (actor.getOwningPlayerId() == sessionMap.get(sess.getId()).getId()) {
-                            actor.executeRPC(rpcMessage, "Server");
+                    if (!rpcMessage.getGreeting()) {
+                        Actor actor = container.getActorById(rpcMessage.getTargetActor());
+                        if (actor != null) {
+                            if (actor.getOwningPlayerId() == sessionMap.get(sess.getId()).getId()) {
+                                actor.executeRPC(rpcMessage, "Server");
+                            } else {
+                                log.warning("Player attempted to modify actor " + actor.getId() + " but was not the owner");
+                            }
                         } else {
-                            log.warning("Player attempted to modify actor " + actor.getId() + " but was not the owner");
+                            log.warning("RPC received for non-existant actor " + rpcMessage.getTargetActor());
                         }
-                    } else {
-                        log.warning("RPC received for non-existant actor " + rpcMessage.getTargetActor());
                     }
                 } else {
                     log.warning("Message sent from client was not a valid RPC");
@@ -87,6 +97,19 @@ public class WebSocketServer {
             }
         } catch (Throwable err){
             log.warning("Error processing message: " + err);
+        }
+    }
+
+    public void send(RPCMessage message){
+        Json js = new Json();
+        String text = js.toJson(message);
+
+        for (ConnectedPlayerInfo connectedPlayerInfo : sessionMap.values()){
+            try {
+                connectedPlayerInfo.getWebSocketSession().getBasicRemote().sendText(text);
+            } catch (Throwable err){
+                log.warning("Error broadcasting message: " + err);
+            }
         }
     }
 

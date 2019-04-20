@@ -14,6 +14,7 @@ public class RPCMessage {
 
     private Boolean isGreeting;
 
+    private int targetPlayerId;
 
     public int getTargetActor() {
         return targetActor;
@@ -48,6 +49,15 @@ public class RPCMessage {
 
     public RPCMessage setGreeting(Boolean greeting) {
         isGreeting = greeting;
+        return this;
+    }
+
+    public int getTargetPlayerId() {
+        return targetPlayerId;
+    }
+
+    public RPCMessage setTargetPlayerId(int targetPlayerId) {
+        this.targetPlayerId = targetPlayerId;
         return this;
     }
 }
