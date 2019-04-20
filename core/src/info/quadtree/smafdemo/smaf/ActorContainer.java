@@ -43,7 +43,7 @@ public abstract class ActorContainer {
         return actorMap.get(id);
     }
 
-    public void sendRPC(long targetActor, String methodName, Object[]... args){
+    public void sendRPC(long targetActor, String methodName, Object... args){
         RPCMessage rpcMessage = new RPCMessage();
         rpcMessage.setTargetActor(targetActor);
         rpcMessage.setRpcMethodName(methodName);

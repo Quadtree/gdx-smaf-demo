@@ -22,11 +22,13 @@ public class Ship extends Actor {
     public void RPC_Server_setThrust(float thrust){
         RPC_Client_setThrust(thrust);
 
-
+        rpc("setThrust", thrust);
     }
 
     public void RPC_Server_setTurn(float turn){
         RPC_Client_setTurn(turn);
+
+        rpc("setTurn", thrust);
     }
 
     public void RPC_Client_setThrust(float thrust){

@@ -52,7 +52,7 @@ public abstract class Actor {
         return this;
     }
 
-    public void rpc(String methodName, Object[] args){
+    public void rpc(String methodName, Object... args){
         container.sendRPC(id, methodName, args);
     }
 
