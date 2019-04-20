@@ -14,4 +14,9 @@ public class Ship extends Actor {
         this.position = position.cpy();
         return this;
     }
+
+    @Override
+    public String getType() {
+        return "Ship";
+    }
 }

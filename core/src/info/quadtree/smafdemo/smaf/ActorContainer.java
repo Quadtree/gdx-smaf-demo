@@ -37,4 +37,5 @@ public abstract class ActorContainer {
     }
 
     public abstract void playerConnected(long id);
+    public abstract Actor actorFactory(String typeName);
 }

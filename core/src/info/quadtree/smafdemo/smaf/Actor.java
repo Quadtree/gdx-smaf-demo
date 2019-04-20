@@ -35,4 +35,6 @@ public abstract class Actor {
         this.owningPlayerId = owningPlayerId;
         return this;
     }
+
+    public abstract String getType();
 }
