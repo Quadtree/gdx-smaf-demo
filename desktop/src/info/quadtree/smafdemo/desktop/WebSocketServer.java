@@ -8,8 +8,7 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Method;
 import info.quadtree.smafdemo.DemoActorContainer;
 import info.quadtree.smafdemo.SMAFDemo;
-import info.quadtree.smafdemo.smaf.Actor;
-import info.quadtree.smafdemo.smaf.ActorContainer;
+import info.quadtree.smafdemo.smaf.*;
 
 import javax.websocket.OnMessage;
 import javax.websocket.Session;
@@ -21,8 +20,6 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import info.quadtree.smafdemo.smaf.ContainerClient;
-import info.quadtree.smafdemo.smaf.RPCMessage;
 
 @ServerEndpoint("/smafserver")
 public class WebSocketServer {
@@ -42,6 +39,17 @@ public class WebSocketServer {
 
     @OnMessage
     public void messageReceived(String msg, Session sess){
+        if (SLog.logCallback == null) {
+            SLog.logCallback = (level, logMessage) -> {
+                switch(level){
+                    case Debug: log.fine(logMessage); break;
+                    case Info: log.info(logMessage); break;
+                    case Warn: log.warning(logMessage); break;
+                    case Error: log.severe(logMessage); break;
+                }
+            };
+        }
+
         if (container == null){
             System.out.println("Starting server");
             new HeadlessApplication(new NoOpAppListener());

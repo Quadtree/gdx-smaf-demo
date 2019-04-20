@@ -4,10 +4,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
 import info.quadtree.smafdemo.DemoActorContainer;
-import info.quadtree.smafdemo.smaf.Actor;
-import info.quadtree.smafdemo.smaf.ActorContainer;
-import info.quadtree.smafdemo.smaf.ContainerClient;
-import info.quadtree.smafdemo.smaf.RPCMessage;
+import info.quadtree.smafdemo.smaf.*;
 
 import java.util.Objects;
 
@@ -37,7 +34,24 @@ public class WebSocketClient extends ContainerClient {
     public void update(){
         init();
 
-        Gdx.app.setLogLevel(Application.LOG_INFO);
+        if (SLog.logCallback == null) {
+            SLog.logCallback = (level, msg) -> {
+                switch (level) {
+                    case Debug:
+                        Gdx.app.debug("SLog", msg);
+                        break;
+                    case Info:
+                        Gdx.app.log("SLog", msg);
+                        break;
+                    case Warn:
+                        Gdx.app.error("SLog", msg);
+                        break;
+                    case Error:
+                        Gdx.app.error("SLog", msg);
+                        break;
+                }
+            };
+        }
 
         int wss = getWebSocketStatus();
         if (wss == WS_STATUS_UNKNOWN || wss == WS_STATUS_CLOSING || wss == WS_STATUS_CLOSED){
