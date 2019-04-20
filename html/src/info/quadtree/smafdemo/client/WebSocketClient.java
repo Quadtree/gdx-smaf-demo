@@ -1,5 +1,6 @@
 package info.quadtree.smafdemo.client;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
 import info.quadtree.smafdemo.DemoActorContainer;
 import info.quadtree.smafdemo.smaf.Actor;
@@ -22,6 +23,11 @@ public class WebSocketClient extends ContainerClient {
     private static final int WS_STATUS_CLOSING = 2;
     private static final int WS_STATUS_CLOSED = 3;
 
+    public void send(RPCMessage message){
+        Json js = new Json();
+        sendText(js.toJson(message));
+    }
+
     @Override
     public void update(){
         init();
@@ -35,6 +41,14 @@ public class WebSocketClient extends ContainerClient {
         if (getWebSocketStatus() == WS_STATUS_OPEN){
             if (container == null){
                 container = factory();
+                container.setRpcMessageSender(this::send);
+
+                Gdx.app.log("SMAF", "Created container, sending greeting");
+
+                RPCMessage greetingMessage = new RPCMessage();
+                greetingMessage.setGreeting(true);
+                send(greetingMessage);
+
                 updateTimeDone = System.currentTimeMillis();
             }
 
@@ -72,21 +86,20 @@ public class WebSocketClient extends ContainerClient {
     }
 
     private static native String init() /*-{
-        console.log("init() called");
-        var clientWebSocket = null;
-        if (typeof(messages) == 'undefined') var messages = null;
+        if (typeof($wnd.clientWebSocket) == 'undefined') $wnd.clientWebSocket = null;
+        if (typeof($wnd.messages) == 'undefined') $wnd.messages = null;
     }-*/;
 
     private static native String getNextMessage() /*-{
-        if (messages.length > 0){
-            return messages.shift();
+        if ($wnd.messages.length > 0){
+            return $wnd.messages.shift();
         }
         return null;
     }-*/;
 
     private static native int getWebSocketStatus() /*-{
-        if (clientWebSocket){
-            return clientWebSocket.readyState;
+        if ($wnd.clientWebSocket){
+            return $wnd.clientWebSocket.readyState;
         } else {
             return -1;
         }
@@ -94,10 +107,14 @@ public class WebSocketClient extends ContainerClient {
 
     private static native int startConnection() /*-{
         console.log("startConnection() called");
-        clientWebSocket = new WebSocket("ws://" + location.host + "/smafserver");
-        messages = [];
-        clientWebSocket.onmessage = function(msg){
-            messages.push(msg);
+        $wnd.clientWebSocket = new WebSocket("ws://" + location.host + "/smafserver");
+        $wnd.messages = [];
+        $wnd.clientWebSocket.onmessage = function(msg){
+            $wnd.messages.push(msg);
         }
+    }-*/;
+
+    private static native void sendText(String text) /*-{
+        $wnd.clientWebSocket.send(text);
     }-*/;
 }

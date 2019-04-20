@@ -59,7 +59,7 @@ public abstract class Actor {
     public void executeRPC(RPCMessage rpcMessage, String context) throws ReflectionException {
         for(Method m : ClassReflection.getMethods(this.getClass())){
             if (m.getName().equals("RPC_" + context + "_" + rpcMessage.getRpcMethodName())){
-                m.invoke(this, rpcMessage.params);
+                m.invoke(this, rpcMessage.getParams());
             }
         }
     }

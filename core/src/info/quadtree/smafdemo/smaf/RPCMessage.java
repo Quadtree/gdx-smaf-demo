@@ -4,10 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RPCMessage {
-    long targetActor;
-    String rpcMethodName;
+    public RPCMessage() {
+    }
 
-    Object[] params;
+    private long targetActor;
+    private String rpcMethodName;
+
+    private Object[] params;
+
+    private Boolean isGreeting;
+
 
     public long getTargetActor() {
         return targetActor;
@@ -33,6 +39,15 @@ public class RPCMessage {
 
     public RPCMessage setRpcMethodName(String rpcMethodName) {
         this.rpcMethodName = rpcMethodName;
+        return this;
+    }
+
+    public Boolean getGreeting() {
+        return isGreeting;
+    }
+
+    public RPCMessage setGreeting(Boolean greeting) {
+        isGreeting = greeting;
         return this;
     }
 }

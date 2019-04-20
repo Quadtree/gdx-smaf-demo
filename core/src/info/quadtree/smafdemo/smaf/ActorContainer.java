@@ -57,5 +57,14 @@ public abstract class ActorContainer {
         rpcMessageSender.accept(rpcMessage);
     }
 
+    public Consumer<RPCMessage> getRpcMessageSender() {
+        return rpcMessageSender;
+    }
+
+    public ActorContainer setRpcMessageSender(Consumer<RPCMessage> rpcMessageSender) {
+        this.rpcMessageSender = rpcMessageSender;
+        return this;
+    }
+
     public abstract void playerConnected(long id);
 }
