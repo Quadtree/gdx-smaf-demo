@@ -2,8 +2,9 @@ package info.quadtree.smafdemo.client;
 
 import info.quadtree.smafdemo.DemoActorContainer;
 import info.quadtree.smafdemo.smaf.ActorContainer;
+import info.quadtree.smafdemo.smaf.ContainerClient;
 
-public class WebSocketClient {
+public class WebSocketClient extends ContainerClient {
     private ActorContainer factory(){
         return new DemoActorContainer();
     }
@@ -18,6 +19,7 @@ public class WebSocketClient {
     private static final int WS_STATUS_CLOSING = 2;
     private static final int WS_STATUS_CLOSED = 3;
 
+    @Override
     public void update(){
         int wss = getWebSocketStatus();
         if (wss == WS_STATUS_UNKNOWN || wss == WS_STATUS_CLOSING || wss == WS_STATUS_CLOSED){
@@ -38,10 +40,7 @@ public class WebSocketClient {
         }
     }
 
-    public boolean isConnected(){
-        return getWebSocketStatus() == WS_STATUS_OPEN;
-    }
-
+    @Override
     public ActorContainer getContainer(){
         return container;
     }

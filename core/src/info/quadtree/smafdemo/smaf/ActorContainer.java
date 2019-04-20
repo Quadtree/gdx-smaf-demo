@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public abstract class ActorContainer {
     private List<Actor> actors = new ArrayList<>();
@@ -41,6 +42,10 @@ public abstract class ActorContainer {
 
     public Actor getActorById(long id){
         return actorMap.get(id);
+    }
+
+    public Stream<Actor> getActorsOwnedBy(long playerId){
+        return actors.stream().filter(it -> it.getOwningPlayerId() == playerId);
     }
 
     public void sendRPC(long targetActor, String methodName, Object... args){
