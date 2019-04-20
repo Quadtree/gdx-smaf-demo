@@ -50,6 +50,6 @@ public class Ship extends Actor {
     public void render() {
         super.render();
 
-
+        SMAFDemo.s.batch.draw(SMAFDemo.s.img, position.x, position.y, 32, 32);
     }
 }

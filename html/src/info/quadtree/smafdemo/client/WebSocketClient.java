@@ -55,6 +55,7 @@ public class WebSocketClient {
     }-*/;
 
     private static native int startConnection() /*-{
+        console.log("startConnection() called");
         clientWebSocket = new WebSocket("ws://" + location.host + "/smafserver");
     }-*/;
 }
