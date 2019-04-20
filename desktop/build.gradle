@@ -10,7 +10,7 @@ repositories {
     google()
 }
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/" ]
 
 project.ext.mainClassName = "info.quadtree.smafdemo.desktop.DesktopLauncher"
