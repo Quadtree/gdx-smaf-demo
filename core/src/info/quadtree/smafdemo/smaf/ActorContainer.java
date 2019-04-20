@@ -4,10 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -83,5 +80,9 @@ public abstract class ActorContainer {
         }
 
         return null;
+    }
+
+    public List<Actor> getActors() {
+        return Collections.unmodifiableList(actors);
     }
 }

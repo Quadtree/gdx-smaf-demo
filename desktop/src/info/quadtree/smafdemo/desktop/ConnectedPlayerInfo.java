@@ -1,5 +1,6 @@
 package info.quadtree.smafdemo.desktop;
 
+import com.badlogic.gdx.math.MathUtils;
 import info.quadtree.smafdemo.smaf.Actor;
 
 import javax.websocket.Session;
@@ -16,6 +17,7 @@ public class ConnectedPlayerInfo {
 
     // TODO: Remove invalid replication data
     private Map<Actor, Map<String, Object>> lastReplicatedData = new HashMap<>();
+    private Map<Actor, Long> lastReplicatedTime = new HashMap<>();
 
     public int getId() {
         return id;
@@ -45,12 +47,17 @@ public class ConnectedPlayerInfo {
     }
 
     public Map<String, Object> considerReplicatingTo(Actor a){
-        Map<String, Object> newReplicationData = a.getReplicationData();
-        Map<String, Object> ret = new HashMap<>();
-
         if (!lastReplicatedData.containsKey(a)){
             lastReplicatedData.put(a, new HashMap<>());
         }
+        if (!lastReplicatedTime.containsKey(a)){
+            lastReplicatedTime.put(a, 0L);
+        }
+
+        if (System.currentTimeMillis() - lastReplicatedTime.get(a) < 200) return null;
+
+        Map<String, Object> ret = new HashMap<>();
+        Map<String, Object> newReplicationData = a.getReplicationData();
 
         for (String k : newReplicationData.keySet()){
             if (!Objects.equals(newReplicationData.get(k), lastReplicatedData.get(a).get(k))){
@@ -59,6 +66,10 @@ public class ConnectedPlayerInfo {
             }
         }
 
-        return ret;
+        if (ret.size() > 0){
+            lastReplicatedTime.put(a, System.currentTimeMillis() + MathUtils.random(-50, 50));
+        }
+
+        return ret.size() > 0 ? ret : null;
     }
 }

@@ -118,6 +118,15 @@ public class WebSocketServer {
             if (System.currentTimeMillis() > updateTimeDone){
                 synchronized (container) {
                     container.update();
+
+                    for (Actor a : container.getActors()){
+                        for (ConnectedPlayerInfo cpi : sessionMap.values()){
+                            Map<String, Object> replicationData = cpi.considerReplicatingTo(a);
+                            if (replicationData != null){
+                                a.rpc("replicate", replicationData);
+                            }
+                        }
+                    }
                 }
                 updateTimeDone += 16;
             } else {
