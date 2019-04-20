@@ -24,6 +24,8 @@ public class WebSocketClient extends ContainerClient {
 
     @Override
     public void update(){
+        init();
+
         int wss = getWebSocketStatus();
         if (wss == WS_STATUS_UNKNOWN || wss == WS_STATUS_CLOSING || wss == WS_STATUS_CLOSED){
             container = null;
@@ -70,7 +72,8 @@ public class WebSocketClient extends ContainerClient {
     }
 
     private static native String init() /*-{
-        if (typeof(clientWebSocket) == 'undefined') var clientWebSocket = null;
+        console.log("init() called");
+        var clientWebSocket = null;
         if (typeof(messages) == 'undefined') var messages = null;
     }-*/;
 
