@@ -1,11 +1,13 @@
 package info.quadtree.smafdemo.smaf;
 
 import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.Field;
 import com.badlogic.gdx.utils.reflect.Method;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Stream;
 
 public abstract class Actor {
     private static Random random = new Random();
@@ -62,5 +64,27 @@ public abstract class Actor {
                 m.invoke(this, rpcMessage.getParams());
             }
         }
+    }
+
+    public Map<String, Object> getReplicationData(){
+        final Map<String, Object> ret = new HashMap<>();
+
+        getReplicatedFields().forEach(it -> {
+            try {
+                Field f = ClassReflection.getField(this.getClass(), it);
+                Object o = f.get(this);
+                if (o != null){
+                    ret.put(it, o);
+                }
+            } catch (ReflectionException ex){
+                throw new RuntimeException(ex);
+            }
+        });
+
+        return ret;
+    }
+
+    public Stream<String> getReplicatedFields(){
+        return Stream.of();
     }
 }

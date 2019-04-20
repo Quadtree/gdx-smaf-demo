@@ -4,6 +4,9 @@ import com.badlogic.gdx.math.Vector2;
 import info.quadtree.smafdemo.smaf.Actor;
 import info.quadtree.smafdemo.smaf.ActorContainer;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class Ship extends Actor {
     private Vector2 position;
 
@@ -51,5 +54,10 @@ public class Ship extends Actor {
         super.render();
 
         SMAFDemo.s.batch.draw(SMAFDemo.s.img, position.x, position.y, 32, 32);
+    }
+
+    @Override
+    public Stream<String> getReplicatedFields() {
+        return Stream.concat(super.getReplicatedFields(), Stream.of("thrust", "turn", "position"));
     }
 }
