@@ -51,39 +51,42 @@ public class WebSocketServer {
             updateThread.start();
         }
 
-        synchronized (container) {
-            if (!sessionMap.containsKey(sess.getId())) {
-                long newPlayerId = rand.nextLong();
-                log.info("New player connected, assigned ID " + newPlayerId);
+        try {
+            synchronized (container) {
+                if (!sessionMap.containsKey(sess.getId())) {
+                    long newPlayerId = rand.nextLong();
+                    log.info("New player connected, assigned ID " + newPlayerId);
 
-                ConnectedPlayerInfo cpi = new ConnectedPlayerInfo();
-                cpi.setId(newPlayerId);
-                cpi.setWebSocketSession(sess);
+                    ConnectedPlayerInfo cpi = new ConnectedPlayerInfo();
+                    cpi.setId(newPlayerId);
+                    cpi.setWebSocketSession(sess);
 
-                sessionMap.put(sess.getId(), cpi);
-            }
-
-            sessionMap.get(sess.getId()).setLastMessage(Instant.now());
-
-            // this should be a RPC, that's all clients can send
-            Json js = new Json();
-            RPCMessage rpcMessage = js.fromJson(RPCMessage.class, msg);
-
-            Actor actor = container.getActorById(rpcMessage.getTargetActor());
-            if (actor != null) {
-                if (actor.getOwningPlayerId() == sessionMap.get(sess.getId()).getId()){
-                    for(Method m : ClassReflection.getMethods(actor.getClass())){
-                        if (m.getName().equals("RPC_" + rpcMessage.getRpcMethodName())){
-
-                        }
-                    }
-
-                } else {
-                    log.warning("Player attempted to modify actor " + actor.getId() + " but was not the owner");
+                    sessionMap.put(sess.getId(), cpi);
                 }
-            } else {
-                log.warning("RPC received for non-existant actor " + rpcMessage.getTargetActor());
+
+                sessionMap.get(sess.getId()).setLastMessage(Instant.now());
+
+                // this should be a RPC, that's all clients can send
+                Json js = new Json();
+                RPCMessage rpcMessage = js.fromJson(RPCMessage.class, msg);
+                if (rpcMessage != null) {
+
+                    Actor actor = container.getActorById(rpcMessage.getTargetActor());
+                    if (actor != null) {
+                        if (actor.getOwningPlayerId() == sessionMap.get(sess.getId()).getId()) {
+                            actor.executeRPC(rpcMessage, "Server");
+                        } else {
+                            log.warning("Player attempted to modify actor " + actor.getId() + " but was not the owner");
+                        }
+                    } else {
+                        log.warning("RPC received for non-existant actor " + rpcMessage.getTargetActor());
+                    }
+                } else {
+                    log.warning("Message sent from client was not a valid RPC");
+                }
             }
+        } catch (Throwable err){
+            log.warning("Error processing message: " + err);
         }
     }
 

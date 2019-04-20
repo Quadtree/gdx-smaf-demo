@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public abstract class ActorContainer {
     private List<Actor> actors = new ArrayList<>();
     private List<Actor> actorAddQueue = new ArrayList<>();
     private Map<Long, Actor> actorMap = new HashMap<>();
+
+    private Consumer<RPCMessage> rpcMessageSender = (msg) -> { System.err.println("Warning: No-op sender has been used."); };
 
     public void update(){
         for (int i=0;i<actors.size();++i){
@@ -40,6 +43,14 @@ public abstract class ActorContainer {
         return actorMap.get(id);
     }
 
+    public void sendRPC(long targetActor, String methodName, Object[]... args){
+        RPCMessage rpcMessage = new RPCMessage();
+        rpcMessage.setTargetActor(targetActor);
+        rpcMessage.setRpcMethodName(methodName);
+        rpcMessage.setParams(args);
+
+        rpcMessageSender.accept(rpcMessage);
+    }
+
     public abstract void playerConnected(long id);
-    public abstract Actor actorFactory(String typeName);
 }

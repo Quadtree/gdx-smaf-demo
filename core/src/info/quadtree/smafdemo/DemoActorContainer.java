@@ -16,11 +16,4 @@ public class DemoActorContainer extends ActorContainer {
 
         addActor(ship);
     }
-
-    @Override
-    public Actor actorFactory(String typeName) {
-        if (Objects.equals(typeName, "Ship")) return new Ship();
-
-        return null;
-    }
 }

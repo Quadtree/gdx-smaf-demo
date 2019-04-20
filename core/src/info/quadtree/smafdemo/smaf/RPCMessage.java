@@ -7,7 +7,7 @@ public class RPCMessage {
     long targetActor;
     String rpcMethodName;
 
-    Map<String, Object> params = new HashMap<>();
+    Object[] params;
 
     public long getTargetActor() {
         return targetActor;
@@ -18,11 +18,11 @@ public class RPCMessage {
         return this;
     }
 
-    public Map<String, Object> getParams() {
+    public Object[] getParams() {
         return params;
     }
 
-    public RPCMessage setParams(Map<String, Object> params) {
+    public RPCMessage setParams(Object[] params) {
         this.params = params;
         return this;
     }
