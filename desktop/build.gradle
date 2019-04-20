@@ -10,6 +10,10 @@ repositories {
     google()
 }
 
+gretty {
+    contextPath = "/"
+}
+
 sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/" ]
 
