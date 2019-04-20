@@ -1,17 +1,25 @@
 package info.quadtree.smafdemo.desktop;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.Method;
 import info.quadtree.smafdemo.DemoActorContainer;
 import info.quadtree.smafdemo.SMAFDemo;
+import info.quadtree.smafdemo.smaf.Actor;
 import info.quadtree.smafdemo.smaf.ActorContainer;
 
 import javax.websocket.OnMessage;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.logging.Logger;
 
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
+import info.quadtree.smafdemo.smaf.RPCMessage;
 
 @ServerEndpoint("/smafserver")
 public class WebSocketServer {
@@ -19,16 +27,18 @@ public class WebSocketServer {
         return new DemoActorContainer();
     }
 
+    Logger log = Logger.getLogger(WebSocketServer.class.getName());
+
     ActorContainer container;
 
     Map<String, ConnectedPlayerInfo> sessionMap = new HashMap<>();
+
+    Random rand = new Random();
 
     long updateTimeDone;
 
     @OnMessage
     public void messageReceived(String msg, Session sess){
-        //System.out.println("msg=" + msg + " sess=" + sess + " sessId=" + sess.getId());
-
         if (container == null){
             System.out.println("Starting server");
             new HeadlessApplication(new NoOpAppListener());
@@ -41,8 +51,40 @@ public class WebSocketServer {
             updateThread.start();
         }
 
-        // this should be a RPC, that's all clients can send
+        synchronized (container) {
+            if (!sessionMap.containsKey(sess.getId())) {
+                long newPlayerId = rand.nextLong();
+                log.info("New player connected, assigned ID " + newPlayerId);
 
+                ConnectedPlayerInfo cpi = new ConnectedPlayerInfo();
+                cpi.setId(newPlayerId);
+                cpi.setWebSocketSession(sess);
+
+                sessionMap.put(sess.getId(), cpi);
+            }
+
+            sessionMap.get(sess.getId()).setLastMessage(Instant.now());
+
+            // this should be a RPC, that's all clients can send
+            Json js = new Json();
+            RPCMessage rpcMessage = js.fromJson(RPCMessage.class, msg);
+
+            Actor actor = container.getActorById(rpcMessage.getTargetActor());
+            if (actor != null) {
+                if (actor.getOwningPlayerId() == sessionMap.get(sess.getId()).getId()){
+                    for(Method m : ClassReflection.getMethods(actor.getClass())){
+                        if (m.getName().equals("RPC_" + rpcMessage.getRpcMethodName())){
+
+                        }
+                    }
+
+                } else {
+                    log.warning("Player attempted to modify actor " + actor.getId() + " but was not the owner");
+                }
+            } else {
+                log.warning("RPC received for non-existant actor " + rpcMessage.getTargetActor());
+            }
+        }
     }
 
     private void updateThread(){

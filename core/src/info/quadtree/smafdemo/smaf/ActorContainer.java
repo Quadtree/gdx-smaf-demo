@@ -36,6 +36,10 @@ public abstract class ActorContainer {
         actorAddQueue.add(actor);
     }
 
+    public Actor getActorById(long id){
+        return actorMap.get(id);
+    }
+
     public abstract void playerConnected(long id);
     public abstract Actor actorFactory(String typeName);
 }
