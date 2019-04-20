@@ -1,5 +1,6 @@
 package info.quadtree.smafdemo.client;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
 import info.quadtree.smafdemo.DemoActorContainer;
@@ -36,6 +37,8 @@ public class WebSocketClient extends ContainerClient {
     public void update(){
         init();
 
+        Gdx.app.setLogLevel(Application.LOG_INFO);
+
         int wss = getWebSocketStatus();
         if (wss == WS_STATUS_UNKNOWN || wss == WS_STATUS_CLOSING || wss == WS_STATUS_CLOSED){
             container = null;
@@ -58,6 +61,7 @@ public class WebSocketClient extends ContainerClient {
 
             String nextMsg;
             while((nextMsg = getNextMessage()) != null){
+                Gdx.app.log("SMAF", "Processing incoming message: " + nextMsg);
                 try {
                     Json js = new Json();
                     RPCMessage rpcMessage = js.fromJson(RPCMessage.class, nextMsg);
@@ -76,10 +80,10 @@ public class WebSocketClient extends ContainerClient {
                             Gdx.app.log("SMAF", "Server has set my id to " + myId);
                         }
                     } else {
-                        System.err.println("Message sent from client was not a valid RPC");
+                        Gdx.app.log("SMAF", "Message sent from client was not a valid RPC");
                     }
                 } catch (Throwable t){
-                    System.err.println("Error processing message: " + t);
+                    Gdx.app.log("SMAF", "Error processing message: " + t);
                 }
             }
 
@@ -120,7 +124,7 @@ public class WebSocketClient extends ContainerClient {
         $wnd.clientWebSocket = new WebSocket("ws://" + location.host + "/smafserver");
         $wnd.messages = [];
         $wnd.clientWebSocket.onmessage = function(msg){
-            $wnd.messages.push(msg);
+            $wnd.messages.push(msg.data);
         }
     }-*/;
 
