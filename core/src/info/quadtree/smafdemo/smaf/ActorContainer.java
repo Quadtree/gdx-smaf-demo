@@ -3,7 +3,7 @@ package info.quadtree.smafdemo.smaf;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActorContainer {
+public abstract class ActorContainer {
     private List<Actor> actors = new ArrayList<>();
     private List<Actor> actorAddQueue = new ArrayList<>();
 
@@ -30,4 +30,6 @@ public class ActorContainer {
     public void addActor(Actor actor){
         actorAddQueue.add(actor);
     }
+
+    public abstract void playerConnected(long id);
 }
