@@ -6,6 +6,9 @@ import info.quadtree.smafdemo.smaf.Actor;
 public class Ship extends Actor {
     private Vector2 position;
 
+    float thrust;
+    float turn;
+
     public Vector2 getPosition() {
         return position.cpy();
     }
@@ -18,5 +21,13 @@ public class Ship extends Actor {
     @Override
     public String getType() {
         return "Ship";
+    }
+
+    public void RPC_setThrust(float thrust){
+        this.thrust = thrust;
+    }
+
+    public void RPC_setTurn(float turn){
+        this.turn = turn;
     }
 }

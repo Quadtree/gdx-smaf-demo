@@ -41,6 +41,7 @@ public class WebSocketServer {
             updateThread.start();
         }
 
+        // this should be a RPC, that's all clients can send
 
     }
 
