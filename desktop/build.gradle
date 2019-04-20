@@ -12,7 +12,7 @@ repositories {
 
 gretty {
     contextPath = "/"
-    extraResourceBase "../html/war/"
+    extraResourceBase "../html/build/dist/"
 }
 
 sourceCompatibility = 1.8

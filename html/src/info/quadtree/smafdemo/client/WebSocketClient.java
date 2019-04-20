@@ -69,6 +69,11 @@ public class WebSocketClient extends ContainerClient {
         return container;
     }
 
+    private static native String init() /*-{
+        if (typeof(clientWebSocket) == 'undefined') var clientWebSocket = null;
+        if (typeof(messages) == 'undefined') var messages = null;
+    }-*/;
+
     private static native String getNextMessage() /*-{
         if (messages.length > 0){
             return messages.shift();
