@@ -1,11 +1,14 @@
 package info.quadtree.smafdemo.smaf;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class ActorContainer {
     private List<Actor> actors = new ArrayList<>();
     private List<Actor> actorAddQueue = new ArrayList<>();
+    private Map<Long, Actor> actorMap = new HashMap<>();
 
     public void update(){
         for (int i=0;i<actors.size();++i){
@@ -15,9 +18,11 @@ public abstract class ActorContainer {
                 for (Actor toAdd : actorAddQueue){
                     toAdd.enteringWorld();
                     actors.add(toAdd);
+                    actorMap.put(toAdd.getId(), toAdd);
                 }
                 actorAddQueue.clear();
             } else {
+                actorMap.remove(actors.get(i).getId());
                 actors.remove(i--);
             }
         }
