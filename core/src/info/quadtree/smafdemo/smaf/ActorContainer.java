@@ -75,10 +75,10 @@ public abstract class ActorContainer {
 
     public Actor createBlankActor(String typeName){
         try {
-            Actor a = (Actor)ClassReflection.forName(typeName).newInstance();
+            Actor a = (Actor)ClassReflection.newInstance(ClassReflection.forName(typeName));
             actors.add(a);
             return a;
-        } catch (ReflectionException|InstantiationException|IllegalAccessException ex){
+        } catch (ReflectionException ex){
             Gdx.app.log("SMAF", "Can't create " + typeName + ": " + ex);
         }
 
