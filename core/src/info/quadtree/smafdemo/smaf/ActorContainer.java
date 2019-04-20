@@ -1,5 +1,9 @@
 package info.quadtree.smafdemo.smaf;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,4 +72,16 @@ public abstract class ActorContainer {
     }
 
     public abstract void playerConnected(int id);
+
+    public Actor createBlankActor(String typeName){
+        try {
+            Actor a = (Actor)ClassReflection.forName(typeName).newInstance();
+            actors.add(a);
+            return a;
+        } catch (ReflectionException|InstantiationException|IllegalAccessException ex){
+            Gdx.app.log("SMAF", "Can't create " + typeName + ": " + ex);
+        }
+
+        return null;
+    }
 }

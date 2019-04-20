@@ -64,11 +64,13 @@ public class WebSocketClient extends ContainerClient {
                     if (rpcMessage != null) {
                         if (!Objects.equals(rpcMessage.getGreeting(), true)) {
                             Actor actor = container.getActorById(rpcMessage.getTargetActor());
-                            if (actor != null) {
-                                actor.executeRPC(rpcMessage, "Client");
-                            } else {
-                                System.err.println("RPC received for non-existant actor " + rpcMessage.getTargetActor());
+
+                            // because we're the client, we always assume that any object the server references exists
+                            if (actor == null){
+                                actor = container.createBlankActor(rpcMessage.getActorType());
                             }
+
+                            actor.executeRPC(rpcMessage, "Client");
                         } else {
                             myId = rpcMessage.getTargetPlayerId();
                             Gdx.app.log("SMAF", "Server has set my id to " + myId);
