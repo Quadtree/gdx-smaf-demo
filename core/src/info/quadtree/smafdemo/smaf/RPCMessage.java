@@ -16,6 +16,8 @@ public class RPCMessage {
 
     private int targetPlayerId;
 
+    private String actorType;
+
     public int getTargetActor() {
         return targetActor;
     }
@@ -58,6 +60,15 @@ public class RPCMessage {
 
     public RPCMessage setTargetPlayerId(int targetPlayerId) {
         this.targetPlayerId = targetPlayerId;
+        return this;
+    }
+
+    public String getActorType() {
+        return actorType;
+    }
+
+    public RPCMessage setActorType(String actorType) {
+        this.actorType = actorType;
         return this;
     }
 }

@@ -62,7 +62,7 @@ public class WebSocketClient extends ContainerClient {
                     Json js = new Json();
                     RPCMessage rpcMessage = js.fromJson(RPCMessage.class, nextMsg);
                     if (rpcMessage != null) {
-                        if (Objects.equals(rpcMessage.getGreeting(), true)) {
+                        if (!Objects.equals(rpcMessage.getGreeting(), true)) {
                             Actor actor = container.getActorById(rpcMessage.getTargetActor());
                             if (actor != null) {
                                 actor.executeRPC(rpcMessage, "Client");

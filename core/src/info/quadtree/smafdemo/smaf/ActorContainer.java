@@ -53,6 +53,7 @@ public abstract class ActorContainer {
         rpcMessage.setTargetActor(targetActor);
         rpcMessage.setRpcMethodName(methodName);
         rpcMessage.setParams(args);
+        rpcMessage.setActorType(getActorById(targetActor).getClass().getCanonicalName());
 
         rpcMessageSender.accept(rpcMessage);
     }
