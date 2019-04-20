@@ -7,6 +7,6 @@ import info.quadtree.smafdemo.SMAFDemo;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new SMAFDemo(), config);
+		new LwjglApplication(new SMAFDemo(null), config);
 	}
 }
