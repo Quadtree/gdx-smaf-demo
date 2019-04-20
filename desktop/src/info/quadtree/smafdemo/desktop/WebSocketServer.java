@@ -54,7 +54,7 @@ public class WebSocketServer {
         try {
             synchronized (container) {
                 if (!sessionMap.containsKey(sess.getId())) {
-                    long newPlayerId = rand.nextLong();
+                    int newPlayerId = rand.nextInt();
                     log.info("New player connected, assigned ID " + newPlayerId);
 
                     ConnectedPlayerInfo cpi = new ConnectedPlayerInfo();

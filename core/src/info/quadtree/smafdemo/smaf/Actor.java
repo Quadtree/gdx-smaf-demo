@@ -10,13 +10,13 @@ import java.util.Random;
 public abstract class Actor {
     private static Random random = new Random();
 
-    private long id;
-    private long owningPlayerId;
+    private int id;
+    private int owningPlayerId;
 
     private ActorContainer container;
 
     public Actor(){
-        id = random.nextLong();
+        id = random.nextInt();
     }
 
     public void enteringWorld(){}
@@ -25,20 +25,20 @@ public abstract class Actor {
     public void render(){}
     public boolean keep(){ return true; }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public Actor setId(long id) {
+    public Actor setId(int id) {
         this.id = id;
         return this;
     }
 
-    public long getOwningPlayerId() {
+    public int getOwningPlayerId() {
         return owningPlayerId;
     }
 
-    public Actor setOwningPlayerId(long owningPlayerId) {
+    public Actor setOwningPlayerId(int owningPlayerId) {
         this.owningPlayerId = owningPlayerId;
         return this;
     }

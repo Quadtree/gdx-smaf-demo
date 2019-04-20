@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public class DemoActorContainer extends ActorContainer {
     @Override
-    public void playerConnected(long id) {
+    public void playerConnected(int id) {
         Ship ship = new Ship();
         ship.setOwningPlayerId(id);
         ship.setPosition(new Vector2(MathUtils.random(0, 20), MathUtils.random(0, 20)));

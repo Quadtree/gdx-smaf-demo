@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 public abstract class ActorContainer {
     private List<Actor> actors = new ArrayList<>();
     private List<Actor> actorAddQueue = new ArrayList<>();
-    private Map<Long, Actor> actorMap = new HashMap<>();
+    private Map<Integer, Actor> actorMap = new HashMap<>();
 
     private Consumer<RPCMessage> rpcMessageSender = (msg) -> { System.err.println("Warning: No-op sender has been used."); };
 
@@ -40,15 +40,15 @@ public abstract class ActorContainer {
         actorAddQueue.add(actor);
     }
 
-    public Actor getActorById(long id){
+    public Actor getActorById(int id){
         return actorMap.get(id);
     }
 
-    public Stream<Actor> getActorsOwnedBy(long playerId){
+    public Stream<Actor> getActorsOwnedBy(int playerId){
         return actors.stream().filter(it -> it.getOwningPlayerId() == playerId);
     }
 
-    public void sendRPC(long targetActor, String methodName, Object... args){
+    public void sendRPC(int targetActor, String methodName, Object... args){
         RPCMessage rpcMessage = new RPCMessage();
         rpcMessage.setTargetActor(targetActor);
         rpcMessage.setRpcMethodName(methodName);
@@ -66,5 +66,5 @@ public abstract class ActorContainer {
         return this;
     }
 
-    public abstract void playerConnected(long id);
+    public abstract void playerConnected(int id);
 }

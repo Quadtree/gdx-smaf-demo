@@ -7,7 +7,7 @@ public class RPCMessage {
     public RPCMessage() {
     }
 
-    private long targetActor;
+    private int targetActor;
     private String rpcMethodName;
 
     private Object[] params;
@@ -15,11 +15,11 @@ public class RPCMessage {
     private Boolean isGreeting;
 
 
-    public long getTargetActor() {
+    public int getTargetActor() {
         return targetActor;
     }
 
-    public RPCMessage setTargetActor(long targetActor) {
+    public RPCMessage setTargetActor(int targetActor) {
         this.targetActor = targetActor;
         return this;
     }

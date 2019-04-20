@@ -4,15 +4,15 @@ import javax.websocket.Session;
 import java.time.Instant;
 
 public class ConnectedPlayerInfo {
-    private long id;
+    private int id;
     private Session webSocketSession;
     private Instant lastMessage;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public ConnectedPlayerInfo setId(long id) {
+    public ConnectedPlayerInfo setId(int id) {
         this.id = id;
         return this;
     }
