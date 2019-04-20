@@ -38,4 +38,18 @@ public class Ship extends Actor {
     public void RPC_Client_setTurn(float turn){
         this.turn = turn;
     }
+
+    @Override
+    public void update() {
+        super.update();
+
+        this.position.y += thrust;
+    }
+
+    @Override
+    public void render() {
+        super.render();
+
+
+    }
 }

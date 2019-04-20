@@ -19,11 +19,11 @@ public abstract class Actor {
         id = random.nextLong();
     }
 
-    void enteringWorld(){}
-    void exitingWorld(){}
-    void update(){}
-    void render(){}
-    boolean keep(){ return true; }
+    public void enteringWorld(){}
+    public void exitingWorld(){}
+    public void update(){}
+    public void render(){}
+    public boolean keep(){ return true; }
 
     public long getId() {
         return id;

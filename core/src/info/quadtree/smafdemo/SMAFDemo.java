@@ -11,36 +11,34 @@ public class SMAFDemo extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
 
-	public boolean hasHead(){
-		return Gdx.app.getType() != Application.ApplicationType.HeadlessDesktop;
-	}
+	DemoActorContainer container;
+
+	public static SMAFDemo s;
 	
 	@Override
 	public void create () {
-		if (hasHead()) {
-			batch = new SpriteBatch();
-			img = new Texture("badlogic.jpg");
-		}
+		batch = new SpriteBatch();
+		img = new Texture("badlogic.jpg");
+
+		container = new DemoActorContainer();
 	}
 
 	@Override
 	public void render () {
 		System.out.println("Render called " + Gdx.graphics.getFramesPerSecond());
 
-		if (hasHead()) {
-			Gdx.gl.glClearColor(1, 0, 0, 1);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-			batch.begin();
-			batch.draw(img, 0, 0);
-			batch.end();
-		}
+		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.begin();
+
+		container.render();
+
+		batch.end();
 	}
 	
 	@Override
 	public void dispose () {
-		if (hasHead()) {
-			batch.dispose();
-			img.dispose();
-		}
+		batch.dispose();
+		img.dispose();
 	}
 }
