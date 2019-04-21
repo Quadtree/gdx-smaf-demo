@@ -10,6 +10,7 @@ import info.quadtree.smafdemo.DemoActorContainer;
 import info.quadtree.smafdemo.SMAFDemo;
 import info.quadtree.smafdemo.smaf.*;
 
+import javax.annotation.PreDestroy;
 import javax.websocket.OnMessage;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
@@ -118,7 +119,7 @@ public class WebSocketServer {
         }
     }
 
-    public void send(RPCMessage message){
+    private void send(RPCMessage message){
         Json js = new Json();
         String text = js.toJson(message);
 
@@ -179,6 +180,12 @@ public class WebSocketServer {
                 }
             }
         }
+    }
+
+    @PreDestroy
+    private void preDestroy(){
+        SLog.info(() -> "preDestroy() called");
+        keepRunning = false;
     }
 
     private static class NoOpAppListener implements ApplicationListener {
