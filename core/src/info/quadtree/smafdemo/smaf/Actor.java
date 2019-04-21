@@ -71,8 +71,8 @@ public abstract class Actor {
 
         getReplicatedFields().forEach(it -> {
             try {
-                Field f = ClassReflection.getField(this.getClass(), it);
-                Object o = f.get(this);
+                Method f = ClassReflection.getMethod(this.getClass(), "get" + it.substring(0, 1).toUpperCase() + it.substring(1));
+                Object o = f.invoke(this);
                 if (o != null){
                     ret.put(it, o);
                 }

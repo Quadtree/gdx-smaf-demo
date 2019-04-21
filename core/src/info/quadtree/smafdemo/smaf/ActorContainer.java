@@ -44,6 +44,7 @@ public abstract class ActorContainer {
     }
 
     public void addActor(Actor actor){
+        actor.setContainer(this);
         actorAddQueue.add(actor);
     }
 

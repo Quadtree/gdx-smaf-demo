@@ -60,4 +60,22 @@ public class Ship extends Actor {
     public Stream<String> getReplicatedFields() {
         return Stream.concat(super.getReplicatedFields(), Stream.of("thrust", "turn", "position"));
     }
+
+    public float getThrust() {
+        return thrust;
+    }
+
+    public Ship setThrust(float thrust) {
+        this.thrust = thrust;
+        return this;
+    }
+
+    public float getTurn() {
+        return turn;
+    }
+
+    public Ship setTurn(float turn) {
+        this.turn = turn;
+        return this;
+    }
 }
