@@ -82,16 +82,21 @@ public class WebSocketClient extends ContainerClient {
                 try {
                     Json js = new Json();
                     RPCMessage rpcMessage = js.fromJson(RPCMessage.class, nextMsg);
+                    SLog.info(() -> "Successfully parsed incoming: " + rpcMessage);
                     if (rpcMessage != null) {
                         if (!Objects.equals(rpcMessage.getGreeting(), true)) {
+                            SLog.info(() -> "Trying to get the actor: " + rpcMessage);
                             Actor actor = container.getActorById(rpcMessage.getTargetActor());
 
                             // because we're the client, we always assume that any object the server references exists
                             if (actor == null){
+                                SLog.info(() -> "Creating new: " + rpcMessage.getTargetActor());
                                 actor = container.createBlankActor(rpcMessage.getActorType());
                             }
 
+                            SLog.info(() -> "EXECUTING THE RPC: " + rpcMessage.getTargetActor());
                             actor.executeRPC(rpcMessage, "Client");
+                            SLog.info(() -> "RPC IS DONE: " + rpcMessage.getTargetActor());
                         } else {
                             myId = rpcMessage.getTargetPlayerId();
                             SLog.info(() -> "Server has set my id to " + myId);

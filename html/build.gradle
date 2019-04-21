@@ -9,8 +9,9 @@ gwt {
     project.webAppDirName = 'webapp'
 
     compiler {
-        strict = true;
-        disableCastChecking = true;
+        strict = true
+        disableCastChecking = true
+        style = 'DETAILED'
     }
 }
 
@@ -48,7 +49,6 @@ task superDev (type: GwtSuperDev) {
     }
 }
 
-
 task dist(dependsOn: [clean, compileGwt]) {
     doLast {
         file("build/dist").mkdirs()
@@ -60,6 +60,24 @@ task dist(dependsOn: [clean, compileGwt]) {
             from "webapp"
             into "build/dist"
             }
+        copy {
+            from "war"
+            into "build/dist"
+        }
+    }
+}
+
+task draftDist(dependsOn: [clean, draftCompileGwt]) {
+    doLast {
+        file("build/dist").mkdirs()
+        copy {
+            from "build/gwt/draftOut"
+            into "build/dist"
+        }
+        copy {
+            from "webapp"
+            into "build/dist"
+        }
         copy {
             from "war"
             into "build/dist"

@@ -130,7 +130,7 @@ public class WebSocketServer {
         while(true){
             if (System.currentTimeMillis() > updateTimeDone){
                 synchronized (container) {
-                    SLog.info(() -> "UPDATE " + container.getActors());
+                    //SLog.info(() -> "UPDATE " + container.getActors());
                     container.update();
 
                     for (Actor a : container.getActors()){

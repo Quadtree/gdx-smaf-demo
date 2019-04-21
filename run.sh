@@ -1,1 +1,1 @@
-./gradlew html:dist desktop:appRun
+./gradlew html:draftDist desktop:appRun
