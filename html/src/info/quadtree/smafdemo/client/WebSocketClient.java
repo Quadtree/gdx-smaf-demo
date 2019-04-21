@@ -147,7 +147,7 @@ public class WebSocketClient extends ContainerClient {
 
     private static native int startConnection() /*-{
         console.log("startConnection() called");
-        $wnd.clientWebSocket = new WebSocket("ws://" + location.host + "/smafserver");
+        $wnd.clientWebSocket = new WebSocket((location.protocol == 'https:' ? 'wss' : 'ws') + "://" + location.host + "/smafserver");
         $wnd.messages = [];
         $wnd.clientWebSocket.onmessage = function(msg){
             $wnd.messages.push(msg.data);

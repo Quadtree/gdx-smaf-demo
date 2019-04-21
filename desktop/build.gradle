@@ -1,5 +1,7 @@
 apply plugin: "java"
 apply plugin: "org.gretty"
+apply plugin: "war"
+apply plugin: 'com.google.cloud.tools.appengine'
 
 repositories {
     mavenLocal()
@@ -13,6 +15,20 @@ repositories {
 gretty {
     contextPath = "/"
     extraResourceBase "../html/build/dist/"
+    loggingLevel = 'ALL'
+}
+
+war {
+    from '../html/build/dist/'
+}
+
+appengine {
+    stage {
+        appEngineDirectory = 'appengine'
+    }
+    deploy {
+        appEngineDirectory = 'appengine'
+    }
 }
 
 sourceCompatibility = 1.8

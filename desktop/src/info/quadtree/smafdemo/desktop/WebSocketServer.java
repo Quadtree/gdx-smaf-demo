@@ -52,6 +52,8 @@ public class WebSocketServer {
             };
         }
 
+        Thread updateThread = null;
+
         if (container == null){
             SLog.info(() -> "Starting server");
             new HeadlessApplication(new NoOpAppListener());
@@ -60,9 +62,7 @@ public class WebSocketServer {
 
             updateTimeDone = System.currentTimeMillis();
 
-            Thread updateThread = new Thread(this::updateThread);
-            updateThread.setDaemon(true);
-            updateThread.start();
+            updateThread = new Thread(this::updateThread);
         }
 
         try {
@@ -85,6 +85,8 @@ public class WebSocketServer {
                     sess.getBasicRemote().sendText(js.toJson(greetingMessage));
 
                     container.playerConnected(newPlayerId);
+
+                    if (updateThread != null) updateThread.start();
                 }
 
                 sessionMap.get(sess.getId()).setLastMessage(Instant.now());

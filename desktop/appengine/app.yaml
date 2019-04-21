@@ -1,0 +1,9 @@
+runtime: java
+env: flex
+
+handlers:
+  - url: /.*
+    script: "N/A"
+
+env_variables:
+  JETTY_MODULES_ENABLE: websocket
