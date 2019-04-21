@@ -13,6 +13,8 @@ public class Ship extends Actor {
     float thrust;
     float turn;
 
+    float health = 1;
+
     public Vector2 getPosition() {
         return position.cpy();
     }
@@ -58,7 +60,12 @@ public class Ship extends Actor {
 
     @Override
     public Stream<String> getReplicatedFields() {
-        return Stream.concat(super.getReplicatedFields(), Stream.of("thrust", "turn", "position"));
+        return Stream.concat(super.getReplicatedFields(), Stream.of("thrust", "turn", "position", "health"));
+    }
+
+    @Override
+    public boolean keep() {
+        return super.keep() && health > 0;
     }
 
     public float getThrust() {
@@ -76,6 +83,15 @@ public class Ship extends Actor {
 
     public Ship setTurn(float turn) {
         this.turn = turn;
+        return this;
+    }
+
+    public float getHealth() {
+        return health;
+    }
+
+    public Ship setHealth(float health) {
+        this.health = health;
         return this;
     }
 }

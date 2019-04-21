@@ -8,6 +8,7 @@ import info.quadtree.smafdemo.smaf.ActorContainer;
 import info.quadtree.smafdemo.smaf.SLog;
 
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class DemoActorContainer extends ActorContainer {
     @Override
@@ -19,5 +20,13 @@ public class DemoActorContainer extends ActorContainer {
 
         addActor(ship);
         SLog.info(() -> "Ship created with ID " + ship.getId());
+    }
+
+    public void playerDisconnected(int id){
+        for (Actor a : getActors().stream().filter(it -> it.getOwningPlayerId() == id).collect(Collectors.toList())){
+            if (a instanceof Ship){
+                ((Ship) a).setHealth(-100);
+            }
+        }
     }
 }

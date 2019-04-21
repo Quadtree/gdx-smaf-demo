@@ -79,13 +79,7 @@ public abstract class ActorContainer {
     }
 
     public abstract void playerConnected(int id);
-
-    public void playerDisconnected(int id){
-        for (Actor a : actors.stream().filter(it -> it.getOwningPlayerId() == id).collect(Collectors.toList())){
-            actors.remove(a);
-            actorMap.remove(a.getId());
-        }
-    }
+    public abstract void playerDisconnected(int id);
 
     public Actor createBlankActor(String typeName, int id){
         try {

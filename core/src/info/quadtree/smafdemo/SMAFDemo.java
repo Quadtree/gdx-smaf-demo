@@ -85,6 +85,17 @@ public class SMAFDemo extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public boolean keyUp(int keycode) {
+		if (keycode == Input.Keys.W){
+			getOwnShip().ifPresent(it -> {
+				it.rpc("setThrust", 0);
+			});
+		}
+		if (keycode == Input.Keys.S){
+			getOwnShip().ifPresent(it -> {
+				it.rpc("setThrust", 0);
+			});
+		}
+
 		return false;
 	}
 
