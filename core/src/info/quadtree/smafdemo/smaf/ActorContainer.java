@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class ActorContainer {
@@ -78,6 +79,13 @@ public abstract class ActorContainer {
     }
 
     public abstract void playerConnected(int id);
+
+    public void playerDisconnected(int id){
+        for (Actor a : actors.stream().filter(it -> it.getOwningPlayerId() == id).collect(Collectors.toList())){
+            actors.remove(a);
+            actorMap.remove(a.getId());
+        }
+    }
 
     public Actor createBlankActor(String typeName, int id){
         try {

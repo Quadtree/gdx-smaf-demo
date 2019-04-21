@@ -157,6 +157,7 @@ public class WebSocketServer {
                     }
 
                     for (String key : keysToDelete){
+                        container.playerDisconnected(sessionMap.get(key).getId());
                         sessionMap.remove(key);
                         SLog.info(() -> key + " has left the game");
                     }
