@@ -14,9 +14,7 @@ import javax.websocket.OnMessage;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Logger;
 
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
@@ -142,6 +140,19 @@ public class WebSocketServer {
                                 a.rpc("replicate", replicationData);
                             }
                         }
+                    }
+
+                    List<String> keysToDelete = new ArrayList<>();
+
+                    for (Map.Entry<String, ConnectedPlayerInfo> cpi : sessionMap.entrySet()){
+                        if (!cpi.getValue().getWebSocketSession().isOpen()) {
+                            keysToDelete.add(cpi.getKey());
+                        }
+                    }
+
+                    for (String key : keysToDelete){
+                        sessionMap.remove(key);
+                        SLog.info(() -> key + " has left the game");
                     }
                 }
                 updateTimeDone += 16;

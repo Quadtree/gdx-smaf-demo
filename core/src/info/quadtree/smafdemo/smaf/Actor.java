@@ -91,7 +91,11 @@ public abstract class Actor {
     public void RPC_Client_replicate(Map<String, Object> replicationData){
         for (Map.Entry<String, Object> entry : replicationData.entrySet()){
             try {
-                MethodMapper.getSetterMethod(getClass(), entry.getKey()).invoke(entry.getValue());
+                Method setter = MethodMapper.getSetterMethod(getClass(), entry.getKey());
+                if (setter.getParameterTypes()[0] == float.class) setter.invoke(this, (float)entry.getValue());
+                if (setter.getParameterTypes()[0] == double.class) setter.invoke(this, (double)entry.getValue());
+                else if (setter.getParameterTypes()[0] == int.class) setter.invoke(this, (int)entry.getValue());
+                else setter.invoke(this, entry.getValue());
 
             } catch (ReflectionException ex){
                 throw new RuntimeException(ex);

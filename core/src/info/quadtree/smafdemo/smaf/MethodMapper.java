@@ -3,8 +3,6 @@ package info.quadtree.smafdemo.smaf;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Method;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
-import jdk.internal.org.objectweb.asm.tree.MethodNode;
-import sun.management.MethodInfo;
 
 import java.util.HashMap;
 import java.util.Map;
