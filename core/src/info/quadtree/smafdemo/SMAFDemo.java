@@ -20,6 +20,7 @@ public class SMAFDemo extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public void create () {
+		SMAFDemo.s = this;
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
 	}

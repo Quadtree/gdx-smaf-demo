@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class Ship extends Actor {
-    private Vector2 position;
+    private Vector2 position = new Vector2(0,0);
 
     float thrust;
     float turn;
