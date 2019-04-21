@@ -35,6 +35,8 @@ public class WebSocketServer {
 
     private static Random rand = new Random();
 
+    public static boolean keepRunning = true;
+
     private static long updateTimeDone;
 
     @OnMessage
@@ -127,7 +129,7 @@ public class WebSocketServer {
 
     private void updateThread(){
         SLog.info(() -> "updateThread() launched");
-        while(true){
+        while(keepRunning){
             if (System.currentTimeMillis() > updateTimeDone){
                 synchronized (container) {
                     //SLog.info(() -> "UPDATE " + container.getActors());
@@ -150,6 +152,7 @@ public class WebSocketServer {
                 }
             }
         }
+        SLog.info(() -> "updateThread() exited");
     }
 
     private static class NoOpAppListener implements ApplicationListener {
