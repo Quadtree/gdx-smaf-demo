@@ -25,6 +25,7 @@ public class DemoActorContainer extends ActorContainer {
     public void playerDisconnected(int id){
         for (Actor a : getActors().stream().filter(it -> it.getOwningPlayerId() == id).collect(Collectors.toList())){
             if (a instanceof Ship){
+                SLog.info(() -> "Marking ship with ID " + a.getId() + " for destruction as the player has left");
                 ((Ship) a).setHealth(-100);
             }
         }

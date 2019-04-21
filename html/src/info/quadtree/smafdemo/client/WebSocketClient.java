@@ -39,7 +39,7 @@ public class WebSocketClient extends ContainerClient {
             SLog.logCallback = (level, msg) -> {
                 switch (level) {
                     case Debug:
-                        Gdx.app.debug("SLog", msg);
+                        //Gdx.app.debug("SLog", msg);
                         break;
                     case Info:
                         Gdx.app.log("SLog", msg);
@@ -79,34 +79,34 @@ public class WebSocketClient extends ContainerClient {
             String nextMsg;
             while((nextMsg = getNextMessage()) != null){
                 final String nextMessageFinal = nextMsg;
-                SLog.info(() -> "Processing incoming message: " + nextMessageFinal);
+                SLog.debug(() -> "Processing incoming message: " + nextMessageFinal);
                 try {
                     Json js = new Json();
                     RPCMessage rpcMessage = js.fromJson(RPCMessage.class, nextMsg);
-                    SLog.info(() -> "Successfully parsed incoming: " + rpcMessage);
+                    SLog.debug(() -> "Successfully parsed incoming: " + rpcMessage);
                     if (rpcMessage != null) {
                         if (!Objects.equals(rpcMessage.getGreeting(), true)) {
-                            SLog.info(() -> "Trying to get the actor: " + rpcMessage);
+                            SLog.debug(() -> "Trying to get the actor: " + rpcMessage);
                             Actor actor = container.getActorById(rpcMessage.getTargetActor());
 
                             // because we're the client, we always assume that any object the server references exists
                             if (actor == null){
-                                SLog.info(() -> "Creating new: " + rpcMessage.getTargetActor());
+                                SLog.debug(() -> "Creating new: " + rpcMessage.getTargetActor());
                                 actor = container.createBlankActor(rpcMessage.getActorType(), rpcMessage.getTargetActor());
                             }
 
-                            SLog.info(() -> "EXECUTING THE RPC: " + rpcMessage.getTargetActor());
+                            SLog.debug(() -> "EXECUTING THE RPC: " + rpcMessage.getTargetActor());
                             actor.executeRPC(rpcMessage, "Client");
-                            SLog.info(() -> "RPC IS DONE: " + rpcMessage.getTargetActor());
+                            SLog.debug(() -> "RPC IS DONE: " + rpcMessage.getTargetActor());
                         } else {
                             myId = rpcMessage.getTargetPlayerId();
-                            SLog.info(() -> "Server has set my id to " + myId);
+                            SLog.debug(() -> "Server has set my id to " + myId);
                         }
                     } else {
-                        SLog.info(() -> "Message sent from client was not a valid RPC");
+                        SLog.warn(() -> "Message sent from client was not a valid RPC");
                     }
                 } catch (Throwable t){
-                    SLog.info(() -> "Error processing message: " + t);
+                    SLog.warn(() -> "Error processing message: " + t);
                 }
             }
 

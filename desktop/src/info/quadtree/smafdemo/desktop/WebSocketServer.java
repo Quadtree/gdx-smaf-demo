@@ -45,7 +45,7 @@ public class WebSocketServer {
         if (SLog.logCallback == null) {
             SLog.logCallback = (level, logMessage) -> {
                 switch(level){
-                    case Debug: log.fine(logMessage); break;
+                    //case Debug: log.fine(logMessage); break;
                     case Info: log.info(logMessage); break;
                     case Warn: log.warning(logMessage); break;
                     case Error: log.severe(logMessage); break;
