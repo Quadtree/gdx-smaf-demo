@@ -135,7 +135,6 @@ public class WebSocketServer {
         while(sessionMap.size() > 0){
             if (System.currentTimeMillis() > updateTimeDone){
                 synchronized (container) {
-                    //SLog.info(() -> "UPDATE " + container.getActors());
                     // a change might cause an actor to be deleted during container.update(), so make sure that
                     // gets replicated first
                     performReplication();
