@@ -45,8 +45,6 @@ public class WebSocketClient extends ContainerClient {
                         Gdx.app.log("SLog", msg);
                         break;
                     case Warn:
-                        Gdx.app.error("SLog", msg);
-                        break;
                     case Error:
                         Gdx.app.error("SLog", msg);
                         break;

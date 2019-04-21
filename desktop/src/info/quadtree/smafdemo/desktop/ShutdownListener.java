@@ -10,12 +10,12 @@ import javax.servlet.annotation.WebListener;
 public class ShutdownListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        SLog.info(() -> "Shutdown requested...");
-        WebSocketServer.keepRunning = false;
+        SLog.info(() -> "contextInitialized()");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-
+        SLog.info(() -> "contextDestroyed(), Shutdown requested...");
+        WebSocketServer.keepRunning = false;
     }
 }

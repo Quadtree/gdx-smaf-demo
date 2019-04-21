@@ -137,16 +137,13 @@ public class WebSocketServer {
             if (System.currentTimeMillis() > updateTimeDone){
                 synchronized (container) {
                     //SLog.info(() -> "UPDATE " + container.getActors());
+                    // a change might cause an actor to be deleted during container.update(), so make sure that
+                    // gets replicated first
+                    performReplication();
+
                     container.update();
 
-                    for (Actor a : container.getActors()){
-                        for (ConnectedPlayerInfo cpi : sessionMap.values()){
-                            Map<String, Object> replicationData = cpi.considerReplicatingTo(a);
-                            if (replicationData != null){
-                                a.rpc("replicate", replicationData);
-                            }
-                        }
-                    }
+                    performReplication();
 
                     List<String> keysToDelete = new ArrayList<>();
 
@@ -171,6 +168,17 @@ public class WebSocketServer {
             }
         }
         SLog.info(() -> "updateThread() exited");
+    }
+
+    private void performReplication() {
+        for (Actor a : container.getActors()){
+            for (ConnectedPlayerInfo cpi : sessionMap.values()){
+                Map<String, Object> replicationData = cpi.considerReplicatingTo(a);
+                if (replicationData != null){
+                    a.rpc("replicate", replicationData);
+                }
+            }
+        }
     }
 
     private static class NoOpAppListener implements ApplicationListener {
