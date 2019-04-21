@@ -48,16 +48,16 @@ public class ConnectedPlayerInfo {
     }
 
     public Map<String, Object> considerReplicatingTo(Actor a){
-        SLog.info(() -> "A");
+        //SLog.info(() -> "A");
         if (!lastReplicatedData.containsKey(a)){
             lastReplicatedData.put(a, new HashMap<>());
         }
         if (!lastReplicatedTime.containsKey(a)){
             lastReplicatedTime.put(a, 0L);
         }
-        SLog.info(() -> "B");
+        //SLog.info(() -> "B");
         if (System.currentTimeMillis() - lastReplicatedTime.get(a) < 200) return null;
-        SLog.info(() -> "C");
+        //SLog.info(() -> "C");
 
         Map<String, Object> ret = new HashMap<>();
         Map<String, Object> newReplicationData = a.getReplicationData();
@@ -73,7 +73,7 @@ public class ConnectedPlayerInfo {
             lastReplicatedTime.put(a, System.currentTimeMillis() + MathUtils.random(-50, 50));
         }
 
-        SLog.info(() -> ret.toString());
+        //SLog.info(() -> ret.toString());
 
         return ret.size() > 0 ? ret : null;
     }
