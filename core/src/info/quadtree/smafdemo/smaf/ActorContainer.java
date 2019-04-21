@@ -61,6 +61,9 @@ public abstract class ActorContainer {
         rpcMessage.setTargetActor(targetActor);
         rpcMessage.setRpcMethodName(methodName);
         rpcMessage.setParams(args);
+
+        if (getActorById(targetActor) == null) throw new RuntimeException("Cannot find actor with ID " + targetActor);
+
         rpcMessage.setActorType(getActorById(targetActor).getClass().getCanonicalName());
 
         rpcMessageSender.accept(rpcMessage);
@@ -80,6 +83,7 @@ public abstract class ActorContainer {
     public Actor createBlankActor(String typeName){
         try {
             Actor a = (Actor)ClassReflection.newInstance(ClassReflection.forName(typeName));
+            a.setContainer(this);
             actors.add(a);
             return a;
         } catch (ReflectionException ex){

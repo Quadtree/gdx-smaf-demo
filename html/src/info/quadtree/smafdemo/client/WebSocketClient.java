@@ -26,6 +26,7 @@ public class WebSocketClient extends ContainerClient {
     private static final int WS_STATUS_CLOSED = 3;
 
     public void send(RPCMessage message){
+        SLog.info(() -> "About to send " + message);
         Json js = new Json();
         sendText(js.toJson(message));
     }
@@ -114,6 +115,11 @@ public class WebSocketClient extends ContainerClient {
                 updateTimeDone += 16;
             }
         }
+    }
+
+    @Override
+    public int getMyId() {
+        return myId;
     }
 
     @Override

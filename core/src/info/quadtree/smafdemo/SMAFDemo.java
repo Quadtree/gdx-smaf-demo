@@ -4,7 +4,11 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import info.quadtree.smafdemo.smaf.Actor;
 import info.quadtree.smafdemo.smaf.ContainerClient;
+import info.quadtree.smafdemo.smaf.SLog;
+
+import java.util.Optional;
 
 public class SMAFDemo extends ApplicationAdapter implements InputProcessor {
 	SpriteBatch batch;
@@ -23,6 +27,8 @@ public class SMAFDemo extends ApplicationAdapter implements InputProcessor {
 		SMAFDemo.s = this;
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
+
+		Gdx.input.setInputProcessor(this);
 	}
 
 	@Override
@@ -44,10 +50,34 @@ public class SMAFDemo extends ApplicationAdapter implements InputProcessor {
 		img.dispose();
 	}
 
+	private Optional<Ship> getOwnShip(){
+		return containerClient.getContainer().getActorsOwnedBy(containerClient.getMyId())
+				.filter(it -> it instanceof Ship)
+				.map(it -> (Ship)it)
+				.findAny();
+	}
+
 	@Override
 	public boolean keyDown(int keycode) {
-		if (keycode == Input.Keys.W){
+		SLog.info(() -> "Key pressed");
 
+		for (Actor a : containerClient.getContainer().getActors()){
+			SLog.info(() -> a.getOwningPlayerId() + " =?= " + containerClient.getMyId());
+		}
+
+		if (keycode == Input.Keys.W){
+			SLog.info(() -> "W pressed");
+			getOwnShip().ifPresent(it -> {
+				SLog.info(() -> "W RPC sent");
+				it.rpc("setThrust", 1);
+			});
+		}
+		if (keycode == Input.Keys.S){
+			SLog.info(() -> "S pressed");
+			getOwnShip().ifPresent(it -> {
+				SLog.info(() -> "S RPC sent");
+				it.rpc("setThrust", -1);
+			});
 		}
 
 		return false;

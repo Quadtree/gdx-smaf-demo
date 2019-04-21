@@ -55,15 +55,21 @@ public abstract class Actor {
     }
 
     public void rpc(String methodName, Object... args){
+        if (container == null) throw new RuntimeException("container cannot be null if trying to send RPC");
         container.sendRPC(id, methodName, args);
     }
 
     public void executeRPC(RPCMessage rpcMessage, String context) throws ReflectionException {
+        String methodName = "RPC_" + context + "_" + rpcMessage.getRpcMethodName();
+
         for(Method m : ClassReflection.getMethods(this.getClass())){
-            if (m.getName().equals("RPC_" + context + "_" + rpcMessage.getRpcMethodName())){
+            if (m.getName().equals(methodName)){
                 m.invoke(this, rpcMessage.getParams());
+                return;
             }
         }
+
+        SLog.warn(() -> "Cannot find RPC target " + methodName);
     }
 
     public Map<String, Object> getReplicationData(){
@@ -85,7 +91,7 @@ public abstract class Actor {
     }
 
     public Stream<String> getReplicatedFields(){
-        return Stream.of();
+        return Stream.of("owningPlayerId");
     }
 
     public void RPC_Client_replicate(Map<String, Object> replicationData){
