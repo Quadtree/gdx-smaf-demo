@@ -56,15 +56,14 @@ public abstract class ActorContainer {
         return actors.stream().filter(it -> it.getOwningPlayerId() == playerId);
     }
 
-    public void sendRPC(int targetActor, String methodName, Object... args){
+    public void sendRPC(Actor targetActor, String methodName, Object... args){
+        if (targetActor == null) throw new RuntimeException("Cannot find actor with ID " + targetActor);
+
         RPCMessage rpcMessage = new RPCMessage();
-        rpcMessage.setTargetActor(targetActor);
+        rpcMessage.setTargetActor(targetActor.getId());
         rpcMessage.setRpcMethodName(methodName);
         rpcMessage.setParams(args);
-
-        if (getActorById(targetActor) == null) throw new RuntimeException("Cannot find actor with ID " + targetActor);
-
-        rpcMessage.setActorType(getActorById(targetActor).getClass().getCanonicalName());
+        rpcMessage.setActorType(targetActor.getClass().getCanonicalName());
 
         rpcMessageSender.accept(rpcMessage);
     }
@@ -80,11 +79,13 @@ public abstract class ActorContainer {
 
     public abstract void playerConnected(int id);
 
-    public Actor createBlankActor(String typeName){
+    public Actor createBlankActor(String typeName, int id){
         try {
             Actor a = (Actor)ClassReflection.newInstance(ClassReflection.forName(typeName));
             a.setContainer(this);
+            a.setId(id);
             actors.add(a);
+            actorMap.put(id, a);
             return a;
         } catch (ReflectionException ex){
             SLog.warn(() -> "Can't create " + typeName + ": " + ex);

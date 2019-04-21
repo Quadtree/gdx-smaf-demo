@@ -92,7 +92,7 @@ public class WebSocketClient extends ContainerClient {
                             // because we're the client, we always assume that any object the server references exists
                             if (actor == null){
                                 SLog.info(() -> "Creating new: " + rpcMessage.getTargetActor());
-                                actor = container.createBlankActor(rpcMessage.getActorType());
+                                actor = container.createBlankActor(rpcMessage.getActorType(), rpcMessage.getTargetActor());
                             }
 
                             SLog.info(() -> "EXECUTING THE RPC: " + rpcMessage.getTargetActor());

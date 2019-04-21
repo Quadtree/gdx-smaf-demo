@@ -56,7 +56,7 @@ public abstract class Actor {
 
     public void rpc(String methodName, Object... args){
         if (container == null) throw new RuntimeException("container cannot be null if trying to send RPC");
-        container.sendRPC(id, methodName, args);
+        container.sendRPC(this, methodName, args);
     }
 
     public void executeRPC(RPCMessage rpcMessage, String context) throws ReflectionException {

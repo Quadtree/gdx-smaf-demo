@@ -18,5 +18,6 @@ public class DemoActorContainer extends ActorContainer {
         ship.setPosition(new Vector2(MathUtils.random(0, 20), MathUtils.random(0, 20)));
 
         addActor(ship);
+        SLog.info(() -> "Ship created with ID " + ship.getId());
     }
 }

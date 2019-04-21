@@ -13,6 +13,9 @@ import info.quadtree.smafdemo.smaf.*;
 import javax.websocket.OnMessage;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.Instant;
 import java.util.*;
 import java.util.logging.Logger;
@@ -91,7 +94,7 @@ public class WebSocketServer {
                 Json js = new Json();
                 RPCMessage rpcMessage = js.fromJson(RPCMessage.class, msg);
                 if (rpcMessage != null) {
-                    if (!rpcMessage.getGreeting()) {
+                    if (!Objects.equals(rpcMessage.getGreeting(), true)) {
                         Actor actor = container.getActorById(rpcMessage.getTargetActor());
                         if (actor != null) {
                             if (actor.getOwningPlayerId() == sessionMap.get(sess.getId()).getId()) {
@@ -108,7 +111,10 @@ public class WebSocketServer {
                 }
             }
         } catch (Throwable err){
-            log.warning("Error processing message: " + err);
+            StringWriter sw = new StringWriter();
+            PrintWriter ps = new PrintWriter(sw);
+            err.printStackTrace(ps);
+            log.warning("Error processing message: " + sw.toString());
         }
     }
 
