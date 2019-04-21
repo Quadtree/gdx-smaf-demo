@@ -71,7 +71,7 @@ public abstract class Actor {
 
         getReplicatedFields().forEach(it -> {
             try {
-                Method f = ClassReflection.getMethod(this.getClass(), "get" + it.substring(0, 1).toUpperCase() + it.substring(1));
+                Method f = MethodMapper.getGetterMethod(getClass(), it);
                 Object o = f.invoke(this);
                 if (o != null){
                     ret.put(it, o);
@@ -91,8 +91,8 @@ public abstract class Actor {
     public void RPC_Client_replicate(Map<String, Object> replicationData){
         for (Map.Entry<String, Object> entry : replicationData.entrySet()){
             try {
-                Method f = ClassReflection.getMethod(this.getClass(), "set" + entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1), Object.class);
-                Object o = f.invoke(this, entry.getValue());
+                MethodMapper.getSetterMethod(getClass(), entry.getKey()).invoke(entry.getValue());
+
             } catch (ReflectionException ex){
                 throw new RuntimeException(ex);
             }
