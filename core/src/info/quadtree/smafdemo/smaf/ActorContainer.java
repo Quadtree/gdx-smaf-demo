@@ -1,6 +1,7 @@
 package info.quadtree.smafdemo.smaf;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 
@@ -9,7 +10,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class ActorContainer {
+public abstract class ActorContainer implements Disposable {
     private List<Actor> actors = new ArrayList<>();
     private List<Actor> actorAddQueue = new ArrayList<>();
     private Map<Integer, Actor> actorMap = new HashMap<>();
@@ -98,5 +99,10 @@ public abstract class ActorContainer {
 
     public List<Actor> getActors() {
         return Collections.unmodifiableList(actors);
+    }
+
+    @Override
+    public void dispose() {
+        // currently no-op
     }
 }
