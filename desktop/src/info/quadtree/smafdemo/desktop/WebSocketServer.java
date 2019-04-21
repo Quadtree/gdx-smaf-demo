@@ -27,15 +27,15 @@ public class WebSocketServer {
         return new DemoActorContainer();
     }
 
-    Logger log = Logger.getLogger(WebSocketServer.class.getName());
+    private static Logger log = Logger.getLogger(WebSocketServer.class.getName());
 
-    ActorContainer container;
+    private static ActorContainer container;
 
-    Map<String, ConnectedPlayerInfo> sessionMap = new HashMap<>();
+    private static Map<String, ConnectedPlayerInfo> sessionMap = new HashMap<>();
 
-    Random rand = new Random();
+    private static Random rand = new Random();
 
-    private long updateTimeDone;
+    private static long updateTimeDone;
 
     @OnMessage
     public void messageReceived(String msg, Session sess){
@@ -81,6 +81,8 @@ public class WebSocketServer {
 
                     Json js = new Json();
                     sess.getBasicRemote().sendText(js.toJson(greetingMessage));
+
+                    container.playerConnected(newPlayerId);
                 }
 
                 sessionMap.get(sess.getId()).setLastMessage(Instant.now());
@@ -124,9 +126,11 @@ public class WebSocketServer {
     }
 
     private void updateThread(){
+        SLog.info(() -> "updateThread() launched");
         while(true){
             if (System.currentTimeMillis() > updateTimeDone){
                 synchronized (container) {
+                    SLog.info(() -> "UPDATE " + container.getActors());
                     container.update();
 
                     for (Actor a : container.getActors()){

@@ -16,21 +16,27 @@ public abstract class ActorContainer {
     private Consumer<RPCMessage> rpcMessageSender = (msg) -> { SLog.error(() -> "Warning: No-op sender has been used."); };
 
     public void update(){
+        flushAddQueue();
+
         for (int i=0;i<actors.size();++i){
             if (actors.get(i).keep()){
                 actors.get(i).update();
 
-                for (Actor toAdd : actorAddQueue){
-                    toAdd.enteringWorld();
-                    actors.add(toAdd);
-                    actorMap.put(toAdd.getId(), toAdd);
-                }
-                actorAddQueue.clear();
+                flushAddQueue();
             } else {
                 actorMap.remove(actors.get(i).getId());
                 actors.remove(i--);
             }
         }
+    }
+
+    private void flushAddQueue() {
+        for (Actor toAdd : actorAddQueue){
+            toAdd.enteringWorld();
+            actors.add(toAdd);
+            actorMap.put(toAdd.getId(), toAdd);
+        }
+        actorAddQueue.clear();
     }
 
     public void render(){
