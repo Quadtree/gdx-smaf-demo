@@ -87,4 +87,15 @@ public abstract class Actor {
     public Stream<String> getReplicatedFields(){
         return Stream.of();
     }
+
+    public void RPC_Client_replicate(Map<String, Object> replicationData){
+        for (Map.Entry<String, Object> entry : replicationData.entrySet()){
+            try {
+                Method f = ClassReflection.getMethod(this.getClass(), "set" + entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1), Object.class);
+                Object o = f.invoke(this, entry.getValue());
+            } catch (ReflectionException ex){
+                throw new RuntimeException(ex);
+            }
+        }
+    }
 }
