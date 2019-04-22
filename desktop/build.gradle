@@ -18,19 +18,6 @@ gretty {
     loggingLevel = 'ALL'
 }
 
-war {
-    from '../html/build/dist/'
-}
-
-appengine {
-    stage {
-        appEngineDirectory = 'appengine'
-    }
-    deploy {
-        appEngineDirectory = 'appengine'
-    }
-}
-
 sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/" ]
 
